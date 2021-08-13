@@ -1,7 +1,7 @@
 /**
  * we can interact with mongoose in threee diffirent ways:
  * [v] Callback
- * [x] Promises
+ * [v] Promises
  * [x] Async/await (Promises)
  * @param {*} req 
  * @param {*} res 
@@ -10,40 +10,21 @@
 
 const User = require('../models/User') 
 
-// const index = (req, res, next) => {
-//   // Callback way
-//   User.find({}, (err, users) => {
-//     if (err) next (err)
-//     return res.status(200).json({users})
-//   })
+const index = async (req, res, next) => {
+  // Async/ await way
+  const users = await User.find({})
+  return res.status(200).json({users}) 
   
-// }
-const index = (req, res, next) => {
-  // Promises way
-  User.find({}).then(users => {
-    return res.status(200).json({users})
-  }).catch(err => next(err))
 }
-// const newUser = (req, res, next) => {
-//   console.log('req.body content', req.body)
-//   // create object model
-//   const newUser = new User(req.body)
-//   console.log('new user', newUser)
-//   newUser.save((err, user) => {
-//     console.error('Error', err)
-//     console.log('user saved', user)
-//     return res.status(201).json({user})
-//   })
-// }
-const newUser = (req, res, next) => {
-  console.log('req.body content', req.body)
+
+const newUser = async (req, res, next) => {
   // create object model
   const newUser = new User(req.body)
-  console.log('new user', newUser)
-  newUser.save().then(user => {
-    return res.status(201).json({user})
-  }).catch(err => next(err))
+  await newUser.save()
+  return res.status(201).json({user: newUser})
 }
+
+
 module.exports = {
   index,
   newUser
